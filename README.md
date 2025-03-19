@@ -61,3 +61,13 @@ func main() {
 ```bash
 go test -v ./...
 ```
+
+#### invidvidually running in main.go
+
+- copy the code above in main.go
+- the try these
+```
+go mod init main
+go mod tidy
+go run main.go
+```
