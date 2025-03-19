@@ -10,7 +10,7 @@ import (
 func TestGenerateVerifier(t *testing.T) {
 	tests := []struct {
 		name       string
-		passcode   int
+		passcode   uint32
 		salt       string // base64 encoded
 		verifier   string // base64 encoded
 			}{
@@ -34,7 +34,7 @@ func TestGenerateVerifier(t *testing.T) {
 			}
 
 			// iterations are fixed to 1000
-			verifier, err := GenerateVerifier(tt.passcode, salt, 10000)
+			verifier, err := GenerateVerifier(tt.passcode, salt, uint16(10000))
 			if err != nil {
 				t.Errorf("GenerateVerifier failed: %v", err)
 			}

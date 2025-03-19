@@ -13,15 +13,15 @@ import (
 
 // VerifierParams contains all parameters for SPAKE2+ verification
 type VerifierParams struct {
-    Passcode   int
+    Passcode   uint32
     Salt       []byte
     SaltBase64 string
-    Iterations int
+    Iterations uint16
     Verifier   []byte
 }
 
 var (
-	InvalidPasscodes = map[int]bool{
+	InvalidPasscodes = map[uint32]bool{
 		00000000: true,
 		11111111: true,
 		22222222: true,
@@ -40,12 +40,12 @@ var (
 )
 
 // GenerateVerifier generates a SPAKE2+ verifier
-func GenerateVerifier(passcode int, salt []byte, iterations int) ([]byte, error) {
+func GenerateVerifier(passcode uint32, salt []byte, iterations uint16) ([]byte, error) {
 	passBytes := make([]byte, 4)
-	binary.LittleEndian.PutUint32(passBytes, uint32(passcode))
+	binary.LittleEndian.PutUint32(passBytes, passcode)
 	
 	wsLength := (curve.Params().BitSize + 7) / 8 + 8
-	ws := pbkdf2.Key(passBytes, salt, iterations, wsLength*2, sha256.New)
+	ws := pbkdf2.Key(passBytes, salt, int(iterations), wsLength*2, sha256.New)
 
 	w0 := new(big.Int).SetBytes(ws[:wsLength])
 	w1 := new(big.Int).SetBytes(ws[wsLength:])
@@ -81,7 +81,7 @@ func GenerateVerifier(passcode int, salt []byte, iterations int) ([]byte, error)
 }
 
 // GenerateRandomPasscode generates a valid random passcode between 0-99999999
-func GenerateRandomPasscode() (int, error) {
+func GenerateRandomPasscode() (uint32, error) {
 	for {
 		var b [4]byte
 		_, err := rand.Read(b[:])
@@ -90,7 +90,7 @@ func GenerateRandomPasscode() (int, error) {
 		}
 		
 		// Get 27 bits (0-99999999)
-		passcode := int(binary.LittleEndian.Uint32(b[:]) & 0x7FFFFFF)
+		passcode := binary.LittleEndian.Uint32(b[:]) & 0x7FFFFFF
 		
 		// Check if valid
 		if passcode <= 99999999 && !InvalidPasscodes[passcode] {
@@ -124,7 +124,7 @@ func GenerateRandomVerifier() (*VerifierParams, error) {
     }
 
     // Use fixed iterations = 1000
-    iterations := 1000
+    var iterations uint16 = 1000
 
     // Generate verifier
     verifier, err := GenerateVerifier(passcode, salt, iterations)
