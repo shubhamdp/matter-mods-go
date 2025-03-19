@@ -1,4 +1,4 @@
-module github.com/shubhamdp/matter-setup-payload-go
+module github.com/shubhamdp/matter-mods-go
 
 go 1.24.1
 
