@@ -56,3 +56,8 @@ func main() {
 }
 
 ```
+
+#### Running unit tests
+```bash
+go test -v ./...
+```
