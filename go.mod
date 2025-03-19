@@ -1,4 +1,4 @@
-module github.com/shubhamdp/matter-onboarding-code-go
+module github.com/shubhamdp/matter-setup-payload-go
 
 go 1.24.1
 
