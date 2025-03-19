@@ -1,1 +1,1 @@
-# matter-setup-payload-go
+# matter-mods-go
